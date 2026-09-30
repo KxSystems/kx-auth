@@ -1,0 +1,4 @@
+interface:
+  display_name: "KX Auth CLI"
+  short_description: "Operate KX identity and RBAC from the CLI"
+  default_prompt: "Use $kx-auth-cli to inspect or administer this KX authorization deployment."

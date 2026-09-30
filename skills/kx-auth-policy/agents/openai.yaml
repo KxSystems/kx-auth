@@ -1,0 +1,4 @@
+interface:
+  display_name: "KX Auth Policy"
+  short_description: "Author protected q authorization policies"
+  default_prompt: "Use $kx-auth-policy to add authorization to this q host."

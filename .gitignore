@@ -1,0 +1,17 @@
+.DS_Store
+*.swp
+*~
+
+# Generated at run time by demos/envoy-gateway/run.sh: the throwaway -U userpass file, and the .env that
+# lets ad-hoc `docker compose` commands work against the running stack.
+demos/envoy-gateway/.run/
+demos/envoy-gateway/.env
+
+# Python, for packages/kx-auth-cli
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.venv/

@@ -1,0 +1,54 @@
+[project]
+name = "kx-auth-cli"
+dynamic = ["version"]
+description = "kx auth and kx rbac — client-side OAuth/identity assertion plus atomic policy administration for the kx.auth and kx.rbac q modules (no fastmcp)."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10,<3.14"
+# The lean shared core (verify + the outbound exchange seam) — deliberately NO fastmcp, so the
+# client-side install stays light. `httpx` is a direct dep for `login`'s RFC 9728/8628 discovery +
+# device-code flow (the CLI talks straight to the authorization server); the CLI otherwise uses
+# stdlib argparse. kx-auth-core is pinned to the family's minor; the b1 lower bound admits its only
+# release so far, a beta. Tighten it to >=0.5.0 once a final 0.5.0 exists: a specifier naming a
+# pre-release lets pip pick later pre-releases over finals.
+dependencies = [
+    "kx-auth-core>=0.5.0b1,<0.6",
+    "httpx",
+]
+
+# `kx auth assert --connect` runs the qIPC bind handshake against a kdb+ target, which needs PyKX.
+# Kept optional so the base CLI stays light + fastmcp-free; project-only assertion needs no extra.
+[project.optional-dependencies]
+qipc = ["pykx>=4.0.0.b4"]
+
+[project.scripts]
+# The `kx` umbrella; `auth` hosts identity/OAuth flows and `rbac` hosts policy operations.
+kx = "kx_auth_cli.cli:main"
+
+# Test-only. Tokens are minted with PyJWT while kx-auth-core verifies with joserfc — deliberate
+# cross-library coverage, so both libraries are dev deps of the suite (see tests/conftest.py).
+[dependency-groups]
+dev = [
+    "pytest>=7.4",
+    "pyjwt>=2.8",
+    "cryptography>=50.0.0",
+]
+
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+# Version is derived from git tags on the CLI's own `cli-vX.Y.Z` tags; the number matches the modules'
+# `vX.Y.Z` release and kx-auth-core's (the family shares a version). A tagged build may pin it via SETUPTOOLS_SCM_PRETEND_VERSION. root="../.." finds
+# the repository's .git from this package subdir; fallback-version keeps non-tag / no-git builds from
+# failing.
+[tool.hatch.version]
+source = "vcs"
+fallback-version = "0.0.0"
+raw-options = { root = "../.." }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kx_auth_cli"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
