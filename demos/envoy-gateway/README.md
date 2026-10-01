@@ -349,8 +349,8 @@ discipline over qIPC with a trusted intermediary in the path. Both declare their
 - **The device-approval scrape is pinned to `keycloak:24.0`.** `scripts/login-check.sh` drives Keycloak's login and
   consent forms with `curl`. If the markup changes it fails loudly rather than skipping, which is the
   behaviour worth having — but it is the most fragile thing here.
-- **The q image is registry-gated.** `scripts/run.sh` checks for it locally and, if missing, says how to
-  `docker login portal.dl.kx.com` and pull it; override with `KDBX_Q_IMAGE`.
+- **The q image is registry-gated.** `scripts/run.sh` pulls it from the KX developer portal if
+  it is missing; if the pull fails it says to `docker login portal.dl.kx.com`. Override with `KDBX_Q_IMAGE`.
 
 ## Not part of the required gate
 

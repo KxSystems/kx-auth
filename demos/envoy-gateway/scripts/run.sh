@@ -57,11 +57,14 @@ if [ ! -f "$KDBX_LICENSE_FILE" ]; then
   exit 1
 fi
 
-if ! docker image inspect "${KDBX_Q_IMAGE:-portal.dl.kx.com/kdbx-q:5.0.20260723-rocky9-r1}" >/dev/null 2>&1; then
-  echo "the q image is not present locally:" >&2
-  echo "  ${KDBX_Q_IMAGE:-portal.dl.kx.com/kdbx-q:5.0.20260723-rocky9-r1}" >&2
-  echo "  docker login portal.dl.kx.com and pull it, or set KDBX_Q_IMAGE to one you have." >&2
-  exit 1
+Q_IMAGE="${KDBX_Q_IMAGE:-portal.dl.kx.com/kdbx-q:5.0.20260723-rocky9-r1}"
+if ! docker image inspect "$Q_IMAGE" >/dev/null 2>&1; then
+  echo "pulling the q image: $Q_IMAGE"
+  if ! docker pull "$Q_IMAGE"; then
+    echo "could not pull the q image: $Q_IMAGE" >&2
+    echo "  docker login portal.dl.kx.com and retry, or set KDBX_Q_IMAGE to one you have." >&2
+    exit 1
+  fi
 fi
 
 if [ "$VERBOSE" -eq 1 ]; then export ENVOY_LOG_LEVEL=info; fi

@@ -9,6 +9,13 @@ The top `## [Unreleased]` section is a rolling buffer of in-flight changes. At r
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-10-01
+
+### Changed
+
+- The envoy-gateway demo pulls the KDB-X q image from the KX developer portal (`portal.dl.kx.com`)
+  when it is not present locally, instead of exiting and asking you to pull it.
+
 ## [0.5.0] - 2026-09-30
 
 First public release. Two peer q modules and a CLI that let a kdb+ process act on behalf of an end user
